@@ -6,12 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.geektech.boredapp3l.data.BoredApiClient;
 import com.geektech.boredapp3l.data.IBoredApiClient;
 import com.geektech.boredapp3l.model.BoredAction;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.main_title) TextView title;
+
+    @OnClick(R.id.main_title)
+    public void onClick(View view) {
+        Toast.makeText(this, "Title click", Toast.LENGTH_SHORT).show();
+    }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -22,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        new BoredApiClient().getAction(new IBoredApiClient.ActionCallback() {
+        new BoredApiClient().getAction(null, "education", new IBoredApiClient.ActionCallback() {
             @Override
             public void onSuccess(BoredAction action) {
-                Log.d("ololo", "Receive action - " + action.getTitle());
+                title.setText(action.getTitle());
+                Log.d("ololo", "Receive action - " + action.getTitle() + " " + action.getType());
             }
 
             @Override

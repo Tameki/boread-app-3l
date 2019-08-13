@@ -4,7 +4,11 @@ import com.geektech.boredapp3l.model.BoredAction;
 
 public interface IBoredApiClient {
 
-    void getAction(ActionCallback callback);
+    void getAction(
+            Float price,
+            String type,
+            ActionCallback callback
+    );
 
     interface ActionCallback {
         void onSuccess(BoredAction action);

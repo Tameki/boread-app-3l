@@ -3,11 +3,10 @@ package com.geektech.boredapp3l.data;
 import com.geektech.boredapp3l.model.BoredAction;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public class BoredApiClient implements IBoredApiClient {
 
@@ -19,26 +18,21 @@ public class BoredApiClient implements IBoredApiClient {
     private BoredClient client = retrofit.create(BoredClient.class);
 
     @Override
-    public void getAction(final ActionCallback callback) {
-        Call<BoredAction> call = client.getAction();
+    public void getAction(
+            Float price,
+            String type,
+            final ActionCallback callback
+    ) {
+        Call<BoredAction> call = client.getAction(price, type);
 
-        call.enqueue(new Callback<BoredAction>() {
+        call.enqueue(new CoreCallback<BoredAction>() {
             @Override
-            public void onResponse(Call<BoredAction> call, Response<BoredAction> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        callback.onSuccess(response.body());
-                    } else {
-                        callback.onFailure(new Exception("Response body is empty" + response.message()));
-                    }
-                } else {
-                    callback.onFailure(new Exception("Response code " + response.code()));
-                }
+            void onSuccess(BoredAction result) {
+                callback.onSuccess(result);
             }
-
             @Override
-            public void onFailure(Call<BoredAction> call, Throwable t) {
-                callback.onFailure(t);
+            void onFailure(Exception exception) {
+                callback.onFailure(exception);
             }
         });
     }
@@ -46,7 +40,10 @@ public class BoredApiClient implements IBoredApiClient {
     interface BoredClient {
 
         @GET("api/activity/")
-        Call<BoredAction> getAction(); //TODO: Add query parameters
+        Call<BoredAction> getAction(
+                @Query("price") Float price,
+                @Query("type") String type
+        ); //TODO: Add query parameters
 
     }
 
