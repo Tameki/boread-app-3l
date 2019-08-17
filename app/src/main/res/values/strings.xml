@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">3l BoredApp</string>
     <string name="intro_first_page">First page</string>
+
+    <string-array name="categories">
+        <item>Random</item>
+        <item>Education</item>
+        <item>Recreational</item>
+        <item>Social</item>
+    </string-array>
 </resources>
